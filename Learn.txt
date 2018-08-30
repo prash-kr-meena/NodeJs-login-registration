@@ -132,7 +132,7 @@ It's mainly only for very large scale applications, with lots of data.
 USEFULL mongo shell COMMANDS :
 
 * show dbs                              : to show list of databases
-* use <my_database_name>                : creates a new database and also switch to it
+* use <my_database_name>                : if not present then creates a new database and also switch to it
 * db                                    : shows current database
 * db.createUser({                       : to create a user of the db, so you can put authorization,
     user : "username",
@@ -150,11 +150,12 @@ USEFULL mongo shell COMMANDS :
 
 
 
+
 ------ ------ FIND DOCUMENT ------ ------
 
 * db.< cls_name >.find()                   : To see/find ALL the document in our collection
 
-* db.< cls_name >.find().preety()          : To see/find ALL the document in our collection  --> with a CLEAN LOOK
+* db.< cls_name >.find().pretty()          : To see/find ALL the document in our collection  --> with a CLEAN LOOK
 
 * YOU CAN FIND DOCUMENT : using some arguments, like $or , $and operator and you can use > ,<, =, >=, <= symbols too
   NOTE : we have different operators for thes symbols : > ,<, =, >=, <=
@@ -166,23 +167,23 @@ USEFULL mongo shell COMMANDS :
 
 eg.
 
- * db.< cls_name >.find( $or:[ {first_name:"prashant"},{first_name : "rahul"} ] ).preety()
- * db.< cls_name >.find( {age: {$lt:40} } ).preety()
+ * db.< cls_name >.find( $or:[ {first_name:"prashant"},{first_name : "rahul"} ] ).pretty()
+ * db.< cls_name >.find( {age: {$lt:40} } ).pretty()
 
  --> QUERYING the document having objets inside it
- * db.< cls_name >.find({"address.city" : "delhi"}).preety()      -> city is the field of field. ie nested field (as nested object)
+ * db.< cls_name >.find({"address.city" : "delhi"}).pretty()      -> city is the field of field. ie nested field (as nested object)
 .                                                                    NOTE : notice the queotes we use to find here.
 
 --> QUERYING the document having array
- * db.< cls_name >.find({membership:"mem_1"}).preety()            -> mem_1 is present in the membership arry
+ * db.< cls_name >.find({membership:"mem_1"}).pretty()            -> mem_1 is present in the membership arry
 .                                                                    NOTE : notice the queotes we use to find here.
 
 
 
 
 ------ ------ SORTING DOCUMENT ------ ------
- * db.< cls_name >.find(_what_ever_condition_).sort({last_name:1}).preety()          -> SORT according to "last_name" ASCENDING
- * db.< cls_name >.find(_what_ever_condition_).sort({last_name:-1}).preety()         -> SORT according to "last_name" DESCENGING
+ * db.< cls_name >.find(_what_ever_condition_).sort({last_name:1}).pretty()          -> SORT according to "last_name" ASCENDING
+ * db.< cls_name >.find(_what_ever_condition_).sort({last_name:-1}).pretty()         -> SORT according to "last_name" DESCENGING
 
 
 

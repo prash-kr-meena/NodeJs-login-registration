@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/prashant-kr-314/NodeJs-login-registration#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
+    "mongoose": "^5.2.10",
     "nodemon": "^1.18.4"
   }
 }
