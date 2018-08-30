@@ -23,8 +23,8 @@ APP.use(BODY_PARSER.urlencoded({
 
 
 
-
-APP.use(EXPRESS.static("public"));
+//? tell express to treate it as a static folder - for static assets
+APP.use(EXPRESS.static(PATH.join(__dirname, "public")));
 
 //! load view-engine
 APP.set('views', PATH.join(__dirname, 'views'));
@@ -59,6 +59,18 @@ DB.on('error', (db_err) => {
 });
 
 
+// ? ---------------------------   HTML-SNIPPETS      ---------------------------
+
+let success = `<div class="alert alert-success alert-dismissible">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+		<strong>Success!</strong>. </div>`;
+
+
+let danger = `<div class="alert alert-danger alert-dismissible">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+		<strong>Danger!</strong>. </div>`;
+
+
 
 
 // ? ---------------------------   ROUTES      ---------------------------
@@ -80,17 +92,50 @@ APP.get('/', (req, res) => {
       });
 });
 
+APP.get('/:_id', (req, res) => {
+      let article_id = req.params._id;
+
+
+      Article.findById(article_id, (err, article) => {
+            if (err) {
+                  throw new Error("ERROR : finding article in DB, So, can't read the article ");
+            }
+
+            let renderVar = {
+                  render_page: "pages/read_article",  // looks in views
+                  page_title: article.title,
+                  article: article
+            };
+
+            res.render("template", renderVar);
+      });
+});
+
+
 
 
 
 APP.get('/articles/add', (req, res) => {
-
       let renderVar = {
             render_page: "./pages/add_article", // index.ejs
             page_title: "Add Articles"
       };
       res.render("template", renderVar);
+});
 
+APP.post('/articles/add', (req, res) => {
+      let article = new Article();
+      article.title = req.body.article_title;
+      article.author = req.body.article_author_name;
+      article.body = req.body.article_body;
+
+      article.save((err) => {
+            if (err) {
+                  let errorMessage = "Article could not be saved in database";
+                  throw new Error(errorMessage);
+            }
+            res.redirect('/');
+      });
 });
 
 

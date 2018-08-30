@@ -1,20 +1,59 @@
-<h1>HOME PAGE</h1>
+<style>
+    @media (min-width: 576px) {
+        .card-columns {
+            column-count: 2;
+        }
+    }
 
-<h1>Articles</h1>
+    @media (min-width: 768px) {
+        .card-columns {
+            column-count: 3;
+        }
+    }
 
-<ol>
+    @media (min-width: 992px) {
+        .card-columns {
+            column-count: 4;
+        }
+    }
 
-    <% all_articles.forEach((article) =>{ %>
-    <li>
-        <span style="font-weight: bold; font-size: 2vw">
-            <%= article.title %>
-        </span>
-        <%= article.author %>
-        <br>
-        <p>
-            <%= article.body %>
-        </p>
+    @media (min-width: 1200px) {
+        .card-columns {
+            column-count: 3;
+        }
+    }
 
-    </li>
-    <% }); %>
-</ol>
+    .card {
+        background-color: rgb(240, 235, 230);
+    }
+</style>
+<div class="container">
+    <h1>Articles</h1>
+    <br>
+
+
+    <div class="card-columns">
+        <% all_articles.forEach((article) => { %>
+
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <%= article.title %>
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    <%= article.author %>
+                </h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's
+                    content.</p>
+                <a href="<%= article._id %>" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+            </div>
+        </div>
+
+
+        <% }); %>
+
+    </div>
+
+</div>
