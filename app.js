@@ -75,8 +75,8 @@ let danger = `<div class="alert alert-danger alert-dismissible">
 
 // ? ---------------------------   ROUTES      ---------------------------
 
+// ? GET
 APP.get('/', (req, res) => {
-
       Article.find({}, (err, all_articles) => {
             if (err) {
                   throw new Error("ERROR : finding article in DB");
@@ -87,14 +87,14 @@ APP.get('/', (req, res) => {
                   page_title: "Home Page",
                   all_articles: all_articles
             };
-
             res.render("template", renderVar);
       });
 });
 
-APP.get('/:_id', (req, res) => {
-      let article_id = req.params._id;
 
+// ? GET
+APP.get('/article/:_id', (req, res) => {
+      let article_id = req.params._id;
 
       Article.findById(article_id, (err, article) => {
             if (err) {
@@ -102,7 +102,7 @@ APP.get('/:_id', (req, res) => {
             }
 
             let renderVar = {
-                  render_page: "pages/read_article",  // looks in views
+                  render_page: "pages/read_article", // looks in views
                   page_title: article.title,
                   article: article
             };
@@ -111,10 +111,24 @@ APP.get('/:_id', (req, res) => {
       });
 });
 
+// ? DELETE
+APP.delete('/article/:_id', (req, res) => {
+      console.log("hit");
+      let article_id = req.params._id;
+      let query = {
+            _id: article_id
+      };
+      Article.remove(query, function (err) {
+            if (err) {
+                  throw new Error(`Article could not be deleted`);
+            } else {
+                  res.send("success");
+            }
+      });
+});
 
 
-
-
+// ? GET
 APP.get('/articles/add', (req, res) => {
       let renderVar = {
             render_page: "./pages/add_article", // index.ejs
@@ -123,6 +137,7 @@ APP.get('/articles/add', (req, res) => {
       res.render("template", renderVar);
 });
 
+// ? POST
 APP.post('/articles/add', (req, res) => {
       let article = new Article();
       article.title = req.body.article_title;
@@ -131,13 +146,57 @@ APP.post('/articles/add', (req, res) => {
 
       article.save((err) => {
             if (err) {
-                  let errorMessage = "Article could not be saved in database";
+                  let errorMessage = "Article could not be SAVED in database";
                   throw new Error(errorMessage);
             }
             res.redirect('/');
       });
 });
 
+
+// ? POST
+APP.post('/articles/update', (req, res) => {
+      let article = {};
+      article.title = req.body.article_title;
+      article.author = req.body.article_author_name;
+      article.body = req.body.article_body;
+
+      let article_id = req.body.article_id; // ! getting _id to update
+
+      let query = {
+            _id: article_id
+      };
+
+      Article.update(query, article, (err) => {
+            if (err) {
+                  let errorMessage = "Article could not be UPDATED in database";
+                  throw new Error(errorMessage);
+            }
+            res.redirect('/article/' + article_id);
+            // res.redirect('/');
+      });
+});
+
+
+// ? POST
+APP.get('/article/edit/:_id', (req, res) => {
+      let article_id = req.params._id;
+
+      Article.findById(article_id, (err, article) => {
+            if (err) {
+                  throw new Error("ERROR : finding article in DB, So, can't read the article ");
+            }
+
+            let renderVar = {
+                  render_page: "./pages/edit_article", // index.ejs
+                  page_title: "Edit Article",
+                  article: article
+            };
+
+            res.render("template", renderVar);
+      });
+
+});
 
 // ? -------------------------------------------------------------------------
 

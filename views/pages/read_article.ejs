@@ -1,10 +1,16 @@
 <div class="container">
+    <br>
+    <!-- NOTE : The article id is passsed to the route -->
+    <a href="/article/edit/<%= article._id %>" class="stylish_yello_link">Edit</a>
+    <span style="padding-right: 20px;"></span>
+    <a href="#" class="delete-article stylish_red_link" data-id="<%= article._id %>">Delete</a>
 
-    <span style="font-weight: bold; font-size: 2vw">
+    <br><br>
+    <span style="font-weight: bold; font-size: 45px; margin-right: 20px;">
         <%= article.title %>
     </span>
     <%= article.author %>
-    <br>
+    <br><br>
     <p>
         <%= article.body %>
     </p>

@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/prashant-kr-314/NodeJs-login-registration#readme",
   "dependencies": {
+    "@types/jquery": "^3.3.6",
     "body-parser": "^1.18.3",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
