@@ -9,7 +9,7 @@
 
 
 
-// ================= Deleting Article : through AJAX   ======================
+//* ================= Deleting Article : through AJAX   ======================
 
 $(document).ready(function () {
       $('.delete-article').on('click', function (e) {
@@ -39,4 +39,4 @@ $(document).ready(function () {
             }
       });
 });
-// ======================= END - Deleting Article =============================
+// * ======================= END - Deleting Article =============================

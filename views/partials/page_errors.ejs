@@ -1,0 +1,15 @@
+<div class="container" id="error-box">
+
+    <ul class="alert alert-danger alert-dismissible    fade show">
+
+        <% errors.forEach( function(err) {  %>
+        <li>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Eroor : &nbsp; </strong>
+            <%= err.msg %>
+            <%= // console.log(err) %>
+        </li>
+
+        <% }); %>
+    </ul>
+</div>

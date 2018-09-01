@@ -26,7 +26,17 @@
     <!-- <%// include partials/header %> -->
     <% include partials/navbar %>
 
-    <%-  include(render_page) %>
+    <div class="container" id="messages-box">
+        <%- messages('partials/alert_message', locals) %>
+    </div>
+
+    <% if(errors !== undefined) { %>
+    <% include partials/page_errors %>
+    <% } %>
+
+
+
+    <%- include(render_page) %>
 
     <!-- <%//  if(page_title !== "Landing Page")  {  %>
     <%//   include partials/footer %>
@@ -36,18 +46,5 @@
 
 <!-- ----------------------------  CUSTOM JS  --------------------------- -->
 <script src="/js/custom.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $('.delete-article').on('click', function (e) {
-            $target = $(e.target);
-
-
-            // console.log($target);
-            // const id = $target.attr('data-id');
-
-        });
-    });
-</script>
 
 </html>

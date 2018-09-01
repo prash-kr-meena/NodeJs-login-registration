@@ -1,5 +1,5 @@
 body {
-    width: 100%;
+    /* width: 100%; */
     background-color: #ddd6c9;
     font-family: "Verdana";
     margin-top: 70px;
@@ -83,3 +83,4 @@ a.red_link:active {
 }
 
 /* ========================    links    END  ======================== */
+
