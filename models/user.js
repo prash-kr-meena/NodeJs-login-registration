@@ -8,10 +8,6 @@ const MONGOOSE = require("mongoose");
 
 // user schema
 let userSchema = MONGOOSE.Schema({
-      name: {
-            type: String,
-            required: true,
-      },
       username: {
             type: String,
             required: true,
@@ -26,5 +22,5 @@ let userSchema = MONGOOSE.Schema({
       }
 });
 
-let UserModel = MONGOOSE.model('UserModel', userSchema);
+let UserModel = MONGOOSE.model('users', userSchema);
 module.exports = UserModel;

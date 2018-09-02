@@ -1,3 +1,5 @@
+<% if ( user == null ) {  %>
+
 <style>
     *,
     *:before,
@@ -43,7 +45,7 @@
         height: auto;
         margin: 0;
         outline: 0;
-        padding: 15px;
+        padding: 10px;
         width: 100%;
         background-color: #e8eeef;
         color: #8a97a0;
@@ -120,23 +122,14 @@
     }
 </style>
 
-<head>
-    <!-- <link rel="stylesheet" href="css/normalize.css">
-    <link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="css/main.css"> -->
-</head>
-
-
-
-<br>
-<form action="#">
+<form action="/users/signup" method="POST">
     <a href="/users/login" class="stylish_yello_link"> login</a>
 
-    <form action="/" method="POST">
+    <form action="/users/signup" method="POST">
 
         <h1>Sign Up</h1>
         <fieldset>
-            <label for="name">Name:</label>
+            <label for="name">UserName:</label>
             <input type="text" id="name" name="user_name">
 
             <label for="mail">Email:</label>
@@ -144,6 +137,9 @@
 
             <label for="password">Password:</label>
             <input type="password" id="password" name="user_password">
+
+            <label for="password">Confirm Password:</label>
+            <input type="password" id="password" name="user_password_confirm">
 
             <label>Role:</label>
             <input type="radio" id="buyer" value="buyer" name="user_role" checked>
@@ -157,3 +153,12 @@
         <button type="submit">Sign Up</button>
     </form>
 </form>
+
+
+<% } else {  %>
+
+<script>
+    window.location = "/";
+</script>
+
+<% }  %>

@@ -26,5 +26,5 @@ let adminSchema = MONGOOSE.Schema({
       }
 });
 
-let AdminModel = MONGOOSE.model('AdminModel', adminSchema);
+let AdminModel = MONGOOSE.model('admins', adminSchema);
 module.exports = AdminModel;

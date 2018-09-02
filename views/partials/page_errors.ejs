@@ -2,9 +2,11 @@
 
     <ul class="alert alert-danger alert-dismissible    fade show">
 
+        <button type="button" class="close" data-dismiss="alert" style="margin-right: 0px; border: 0px solid red">
+            &times;</button>
+
         <% errors.forEach( function(err) {  %>
         <li>
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Eroor : &nbsp; </strong>
             <%= err.msg %>
             <%= // console.log(err) %>

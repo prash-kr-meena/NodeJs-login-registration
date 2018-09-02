@@ -6,7 +6,9 @@ const EXPRESS = require("express"),
       BODY_PARSER = require("body-parser"),
       SESSION = require("express-session"),
       EXPRESS_VALIDATOR = require('express-validator'),
-      PATH = require("path");
+      PATH = require("path"),
+      PASSPORT = require("passport"),
+      DatabaseConfig = require("./config/database");
 
 const APP = EXPRESS();
 const PORT = 3000;
@@ -49,16 +51,12 @@ APP.use(function (req, res, next) {
 APP.use(EXPRESS_VALIDATOR());
 
 
-
-
-
 //? tell express to treate it as a static folder - for static assets
 APP.use(EXPRESS.static(PATH.join(__dirname, "public")));
 
 //! load view-engine
 APP.set('views', PATH.join(__dirname, 'views'));
 APP.set('view engine', 'ejs');
-
 
 
 
@@ -71,7 +69,8 @@ const Article = require("./models/article");
 // ! connect to mongoDB && Some checks
 // Mongoose provides a straight-forward, schema-based solution to model your application data.
 //  It includes built-in type casting, validation, query building, business logic hooks and more, out of the box.
-MONGOOSE.connect('mongodb://localhost/Authentication_App_DB', {
+
+MONGOOSE.connect(DatabaseConfig.database_host, {
       useNewUrlParser: true
 });
 const DB = MONGOOSE.connection;
@@ -86,6 +85,34 @@ DB.once('open', () => {
 DB.on('error', (db_err) => {
       console.log("DB ERROR : " + db_err);
 });
+
+
+
+// ? middle ware to initialize  passportjs
+APP.use(PASSPORT.initialize());
+APP.use(PASSPORT.session());
+
+
+//? passport config   --> bringing in the functionality to authenticate
+let passport_authentication_functionality = require("./config/passport");
+passport_authentication_functionality(PASSPORT);
+
+
+// * setting up the user global variable, which is set by passport if we are authenticated & logged in
+// creating a GLOBAL variable for all the routes
+// APP.get('*', (req, res, next) => {
+//       res.locals.user = req.user || null; // so if not set just set it to null only
+//       next();
+// });
+
+APP.use('*', (req, res, next) => {
+      res.locals.user = req.user || null; // so if not set just set it to null only
+      next();
+});
+
+
+
+
 
 // ? ---------------------------   ROUTES      ---------------------------
 
