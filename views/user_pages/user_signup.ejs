@@ -129,27 +129,31 @@
 
 
 <br>
-<form action="/" method="POST">
+<form action="#">
+    <a href="/users/login" class="stylish_yello_link"> login</a>
 
-    <h1>Sign Up</h1>
-    <fieldset>
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="user_name">
+    <form action="/" method="POST">
 
-        <label for="mail">Email:</label>
-        <input type="email" id="mail" name="user_email">
+        <h1>Sign Up</h1>
+        <fieldset>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="user_name">
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="user_password">
+            <label for="mail">Email:</label>
+            <input type="email" id="mail" name="user_email">
 
-        <label>Role:</label>
-        <input type="radio" id="buyer" value="buyer" name="user_role" checked>
-        <label for="under_13" class="light"> Buyer </label>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="user_password">
 
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="radio" id="dealer" value="dealer" name="user_role">
-        <label for="over_13" class="light"> Dealer </label>
-    </fieldset>
+            <label>Role:</label>
+            <input type="radio" id="buyer" value="buyer" name="user_role" checked>
+            <label for="under_13" class="light"> Buyer </label>
 
-    <button type="submit">Sign Up</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" id="dealer" value="dealer" name="user_role">
+            <label for="over_13" class="light"> Dealer </label>
+        </fieldset>
+
+        <button type="submit">Sign Up</button>
+    </form>
 </form>

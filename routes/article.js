@@ -12,7 +12,7 @@ const Article = require("../models/article");
 // ? GET
 ROUTER.get('/add', (req, res) => {
       let renderVar = {
-            render_page: "./pages/add_article", // index.ejs
+            render_page: "./article_pages/add_article", // index.ejs
             page_title: "Add Articles",
             errors: undefined,
       };
@@ -30,7 +30,7 @@ ROUTER.get('/:_id', (req, res) => {
             }
 
             let renderVar = {
-                  render_page: "pages/read_article", // looks in views
+                  render_page: "article_pages/read_article", // looks in views
                   page_title: article.title,
                   article: article,
                   errors: undefined,
@@ -55,7 +55,7 @@ ROUTER.post('/add', (req, res) => {
 
       if (errors) {
             let renderVar = {
-                  render_page: "./pages/add_article", // index.ejs
+                  render_page: "./article_pages/add_article", // index.ejs
                   page_title: "Add Articles",
                   errors: errors,
             };
@@ -128,7 +128,7 @@ ROUTER.get('/edit/:_id', (req, res) => {
             }
 
             let renderVar = {
-                  render_page: "./pages/edit_article", // index.ejs
+                  render_page: "./article_pages/edit_article", // index.ejs
                   page_title: "Edit Article",
                   article: article,
                   errors: res.errors

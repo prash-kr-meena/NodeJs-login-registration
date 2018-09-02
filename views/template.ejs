@@ -22,6 +22,7 @@
 
 
 <body>
+    <% if(errors !== "404") { %>
 
     <!-- <%// include partials/header %> -->
     <% include partials/navbar %>
@@ -34,9 +35,13 @@
     <% include partials/page_errors %>
     <% } %>
 
+    <%- include(render_page) %>
 
+    <% } else { %>
 
     <%- include(render_page) %>
+
+    <%} %>
 
     <!-- <%//  if(page_title !== "Landing Page")  {  %>
     <%//   include partials/footer %>

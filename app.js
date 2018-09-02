@@ -5,7 +5,6 @@ const EXPRESS = require("express"),
       MONGOOSE = require("mongoose"), // middleware to connect node app & mongoDB | Elegant MongoDB object modeling for Node.js
       BODY_PARSER = require("body-parser"),
       SESSION = require("express-session"),
-      // EXPRESS_VALIDATOR_CHECK = require('express-validator/check'),
       EXPRESS_VALIDATOR = require('express-validator'),
       PATH = require("path");
 
@@ -98,7 +97,7 @@ APP.get('/', (req, res) => {
             }
 
             let renderVar = {
-                  render_page: "./pages/index",
+                  render_page: "./home",
                   page_title: "Home Page",
                   all_articles: all_articles,
                   errors: undefined,
@@ -107,37 +106,31 @@ APP.get('/', (req, res) => {
       });
 });
 
-let article_route = require('./routes/article');
+const article_route = require('./routes/article');
 APP.use('/article', article_route);
+
+
+const users_route = require('./routes/users');
+APP.use('/users', users_route);
+
+const admin_route = require('./routes/admins');
+APP.use('/admins', admin_route);
+
+
+
+// ? GET
+APP.get('*', (req, res) => {
+      let renderVar = {
+            render_page: "./page404",
+            page_title: "404",
+            errors: "404",
+      };
+      res.render("template", renderVar);
+});
 
 
 // ? ------------------------       upcoming     ----------------------------
 
-APP.get('/signup', (req, res) => {
-      res.render("template", {
-            page_title: "signup-form",
-            render_page: "pages/signup",
-            errors: undefined,
-      });
-});
-
-
-APP.get('/login', (req, res) => {
-      res.render("template", {
-            page_title: "login-form",
-            render_page: "pages/login",
-            errors: undefined,
-      });
-});
-
-
-APP.get('/admin/login', (req, res) => {
-      res.render("template", {
-            page_title: "ADMIN-Login",
-            render_page: "pages/admin_login",
-            errors: undefined,
-      });
-});
 
 
 // ? -------------------------------------------------------------------------
