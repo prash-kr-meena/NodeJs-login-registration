@@ -31,7 +31,7 @@ USER_ROUTER.get('/login', (req, res) => {
 });
 
 
-USER_ROUTER.get('/logout', (req, res, next) => {
+USER_ROUTER.get('/logout', (req, res) => {
       req.logOut();
       req.flash("success", "Successfully loged out");
       res.redirect("/users/login");

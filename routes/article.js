@@ -4,13 +4,14 @@
 const EXPRESS = require("express");
 const ROUTER = EXPRESS.Router();
 
-const Article = require("../models/article");
+const ArticleModel = require("../models/article");
+const UserModel = require("../models/user");
 
 
 // ! ============  GET ROUTES ============
 
 // ? GET
-ROUTER.get('/add', (req, res) => {
+ROUTER.get('/add', ensureAuthenticated, (req, res) => {
       let renderVar = {
             render_page: "./article_pages/add_article", // index.ejs
             page_title: "Add Articles",
@@ -21,22 +22,32 @@ ROUTER.get('/add', (req, res) => {
 
 
 // ? GET
-ROUTER.get('/:_id', (req, res) => {
+ROUTER.get('/:_id', ensureAuthenticated, (req, res) => {
       let article_id = req.params._id;
 
-      Article.findById(article_id, (err, article) => {
+
+      ArticleModel.findById(article_id, (err, article) => {
             if (err) {
                   throw new Error("ERROR : finding article in DB, So, can't read the article ");
             }
 
-            let renderVar = {
-                  render_page: "article_pages/read_article", // looks in views
-                  page_title: article.title,
-                  article: article,
-                  errors: undefined,
-            };
+            let user_id = article.author;
+            UserModel.findById(user_id, (err, user) => {
+                  if (err) {
+                        throw new Error("ERROR : finding article's author name in DB");
+                  }
 
-            res.render("template", renderVar);
+                  // console.log(user);
+                  article.name_of_writer = user.username;
+                  let renderVar = {
+                        render_page: "article_pages/read_article", // looks in views
+                        page_title: article.title,
+                        article: article,
+                        errors: undefined,
+                  };
+
+                  res.render("template", renderVar);
+            });
       });
 });
 
@@ -45,10 +56,10 @@ ROUTER.get('/:_id', (req, res) => {
 
 
 // ? POST
-ROUTER.post('/add', (req, res) => {
+ROUTER.post('/add', ensureAuthenticated, (req, res) => {
       // ! validate the changes
       req.checkBody('article_title', 'Article title required').notEmpty();
-      req.checkBody('article_author_name', 'Author Name required').notEmpty();
+      // req.checkBody('article_author_name', 'Author Name required').notEmpty();
       req.checkBody('article_body', 'Content is required').notEmpty();
 
       var errors = req.validationErrors();
@@ -61,9 +72,9 @@ ROUTER.post('/add', (req, res) => {
             };
             res.render("template", renderVar);
       } else {
-            let article = new Article();
+            let article = new ArticleModel();
             article.title = req.body.article_title;
-            article.author = req.body.article_author_name;
+            article.author = req.user._id; // ? as we will be loged in  when writting this article
             article.body = req.body.article_body;
 
             article.save((err) => {
@@ -81,7 +92,7 @@ ROUTER.post('/add', (req, res) => {
 
 
 // ? POST
-ROUTER.post('/update', (req, res) => {
+ROUTER.post('/update', ensureAuthenticated, (req, res) => {
       let article_id = req.body.article_id; // ! getting _id to update  ---> hidden attribute in html
 
       // ! validate the changes
@@ -106,7 +117,7 @@ ROUTER.post('/update', (req, res) => {
                   _id: article_id
             };
 
-            Article.updateOne(query, article, (err) => {
+            ArticleModel.updateOne(query, article, (err) => {
                   if (err) {
                         let errorMessage = "Article could not be UPDATED in database";
                         throw new Error(errorMessage);
@@ -119,50 +130,73 @@ ROUTER.post('/update', (req, res) => {
 
 
 // ? POST
-ROUTER.get('/edit/:_id', (req, res) => {
+ROUTER.get('/edit/:_id', ensureAuthenticated, (req, res) => {
       let article_id = req.params._id;
 
-      Article.findById(article_id, (err, article) => {
+      ArticleModel.findById(article_id, (err, article) => {
             if (err) {
                   throw new Error("ERROR : finding article in DB, So, can't read the article ");
             }
-
-            let renderVar = {
-                  render_page: "./article_pages/edit_article", // index.ejs
-                  page_title: "Edit Article",
-                  article: article,
-                  errors: res.errors
-            };
-
-            console.log(renderVar.errors);
-
-            res.render("template", renderVar);
+            if (article.author !== req.user.id) {
+                  req.flash("danger", "Not authorized");
+                  res.redirect("/");
+            } else {
+                  let renderVar = {
+                        render_page: "./article_pages/edit_article", // index.ejs
+                        page_title: "Edit Article",
+                        article: article,
+                        errors: res.errors
+                  };
+                  // console.log(renderVar.errors);
+                  res.render("template", renderVar);
+            }
       });
-
 });
 
 
 // ! ============  DELETE ROUTES ============
 
 // ? DELETE
-ROUTER.delete('/:_id', (req, res) => {
-      let article_id = req.params._id;
-      let query = {
-            _id: article_id
-      };
-      Article.deleteOne(query, function (err) {
-            if (err) {
-                  throw new Error(`Article could not be deleted`);
-            } else {
-                  req.flash("danger", "Article deleted");
-                  res.send("success");
-            }
-      });
+ROUTER.delete('/:_id', (req, res) => { //  ensureAuthenticated  ---> will not work, as the DELETE reques is generated by AJAX
+      // ? CHECK if user is loged in
+      if (req.user === null) {
+            res.status(500).send();
+      } else {
+            let article_id = req.params._id;
 
+            //? check if the article belongs to this user or not
+            ArticleModel.findById(article_id, (err, article) => {
+                  if (article.author === req.user.id) {
+                        let query = {
+                              _id: article_id
+                        };
+                        ArticleModel.deleteOne(query, function (err) {
+                              if (err) {
+                                    throw new Error(`Article could not be deleted`);
+                              } else {
+                                    req.flash("danger", "Article deleted");
+                                    res.send("success");
+                              }
+                        });
+                  } else {
+                        res.status(500).send(); // ? not  deleted
+                  }
+            });
+
+      }
 });
 
 
 
+// ! ============  DELETE ROUTES ============
+function ensureAuthenticated(req, res, next) {
+      if (req.isAuthenticated()) {
+            next();
+      } else {
+            req.flash("danger", "plz login");
+            res.redirect("/users/login");
+      }
+}
 
 // ? ============  export router ============
 module.exports = ROUTER;

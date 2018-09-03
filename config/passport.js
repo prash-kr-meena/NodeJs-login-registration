@@ -26,8 +26,6 @@ let passport_authentication_functionality = function (PASSPORT) { //  implemetin
                   }
                   //? compare password hashes
                   let matched = BCRYPT_JS.compareSync(password, user.password);
-                  console.log("password status is " + matched);
-
                   if (!matched) {
                         return done(null, false, {
                               message: 'Wrong password.'

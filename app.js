@@ -99,17 +99,11 @@ passport_authentication_functionality(PASSPORT);
 
 
 // * setting up the user global variable, which is set by passport if we are authenticated & logged in
-// creating a GLOBAL variable for all the routes
-// APP.get('*', (req, res, next) => {
-//       res.locals.user = req.user || null; // so if not set just set it to null only
-//       next();
-// });
-
+//? creating a GLOBAL variable for all the routes
 APP.use('*', (req, res, next) => {
       res.locals.user = req.user || null; // so if not set just set it to null only
       next();
 });
-
 
 
 
@@ -123,15 +117,41 @@ APP.get('/', (req, res) => {
                   throw new Error("ERROR : finding article in DB");
             }
 
-            let renderVar = {
-                  render_page: "./home",
-                  page_title: "Home Page",
-                  all_articles: all_articles,
-                  errors: undefined,
-            };
-            res.render("template", renderVar);
+            if (all_articles.length === 0) {
+                  callback();
+            }
+
+            let UserModel = require("./models/user");
+
+            let elementsProcessed = 0;
+            all_articles.forEach((article) => {
+                  let user_id = article.author;
+                  UserModel.findById(user_id, (err, user) => {
+                        if (err) {
+                              throw new Error("ERROR : finding article's author name in DB  -> for CARD VIEWS");
+                        }
+                        article.name_of_writer = user.username;
+                        if (++elementsProcessed === all_articles.length) {
+                              callback();
+                        }
+                  });
+            });
+
+            function callback() {
+                  let renderVar = {
+                        render_page: "./home",
+                        page_title: "Home Page",
+                        all_articles: all_articles,
+                        errors: undefined,
+                  };
+                  res.render("template", renderVar);
+            }
       });
+
 });
+
+
+
 
 const article_route = require('./routes/article');
 APP.use('/article', article_route);
@@ -139,6 +159,8 @@ APP.use('/article', article_route);
 
 const users_route = require('./routes/users');
 APP.use('/users', users_route);
+
+
 
 const admin_route = require('./routes/admins');
 APP.use('/admins', admin_route);

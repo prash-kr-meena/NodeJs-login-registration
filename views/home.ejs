@@ -39,16 +39,19 @@
                     <%= article.title %>
                 </h5>
                 <h6 class="card-subtitle mb-2 text-muted" style="font-style: italic">
-                    <%= article.author %>
+                    <%= // article.author %>
+                    <%= article.name_of_writer %>
                 </h6>
                 <p class="card-text">
                     <%= article.body.substring(1,80)%> ...
                 </p>
                 <a href="article/<%= article._id %>" class="card-link yello_link">Read</a>
-                <a href="/article/edit/<%=article._id %>" class="card-link yello_link">Edit</a>
 
+                <% if ( user.id === article.author  ) {  %>
+                <a href="/article/edit/<%=article._id %>" class="card-link yello_link">Edit</a>
                 <a href="#" class="card-link delete-article red_link" data-id="<%= article._id %>" style="padding-left: 70px;">
                     Delete</a>
+                <% } %>
 
             </div>
         </div>
